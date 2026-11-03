@@ -5,9 +5,8 @@ cottonbm ROM set. Python 3 standard library only.
 usage: make_cottonbme.py ROMDIR [OUTDIR]
 
 ROMDIR must hold cottonbm.zip (the MAME set). The result is
-OUTDIR/cottonbme.zip (OUTDIR defaults to ROMDIR), with the chips the
-translation changes; cottonbme is a clone of cottonbm, so the emulator also
-needs cottonbm.zip (the other chips) and the ST-V BIOS (stvbios.zip).
+OUTDIR/cottonbme.zip (OUTDIR defaults to ROMDIR), a complete set: all the
+chips, ready to use. The emulator also needs the ST-V BIOS (stvbios.zip).
 """
 import hashlib, os, sys, zipfile, zlib, lzma, struct
 
@@ -46,13 +45,13 @@ def main():
             o += 1 + n
         src_crc, dst_crc, size = struct.unpack('>III', patch[o:o + 12])
         o += 12
-        xor = lzma.decompress(patch[o:o + size])
+        xor = lzma.decompress(patch[o:o + size]) if size else None
         o += size
         src = find_member(zips, src_crc)
         if src is None:
             print('%s (CRC %08x) not found in cottonbm.zip' % (names[0], src_crc))
             return 1
-        dst = bytes(a ^ b for a, b in zip(src, xor))
+        dst = bytes(a ^ b for a, b in zip(src, xor)) if xor else src
         if zlib.crc32(dst) != dst_crc:
             print('%s: wrong result' % names[1])
             return 1

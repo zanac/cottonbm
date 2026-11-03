@@ -7,11 +7,56 @@ for [mame2003-plus](https://github.com/zanac/mame2003-plus-libretro)
 
 Most of the arcade game is already in English: menus, in-game messages,
 ranking, staff roll and ending. What is Japanese is the line one of the
-characters says on the stage result screen and the shot/weapon panel of
-the character select screen. There is no fan translation of this game, so
-the lines are translated here and drawn with the English font of the
-Cotton 2 Saturn fan translation, the same one the
+characters says on the stage result screen, the shot/weapon panel of the
+character select screen, the katakana under the title logo and the full
+names of the characters in the attract mode. There is no fan translation
+of this game, so the lines are translated here and drawn with the English
+font of the Cotton 2 Saturn fan translation, the same one the
 [Cotton 2 English](https://github.com/zanac/Cotton2) arcade set uses.
+
+The game also has an English mode, used with a non-Japanese BIOS (US,
+Europe, ...), and it has two mistakes of its own: the select screen shows
+the weapons of the wrong character and says "Spred". Both are fixed here,
+so the set is right with every BIOS.
+
+## For dummies
+
+You need two files you already have from your MAME/RetroArch ROM
+collection: `cottonbm.zip` (Cotton Boomerang) and `stvbios.zip` (the ST-V
+BIOS). This project does not give them to you.
+
+1. Install Python 3 (Windows: [python.org](https://www.python.org/downloads/),
+   tick "Add python.exe to PATH" during the setup; macOS and Linux usually
+   have it already).
+2. Download this project: green **Code** button on GitHub, **Download
+   ZIP**, and unpack it. Or with git:
+   ```
+   git clone https://github.com/zanac/cottonbm
+   ```
+3. Put `cottonbm.zip` in the `cottonbm` folder you just unpacked (next to
+   this README).
+4. Open a terminal in that folder (Windows: type `cmd` in the address bar
+   of the folder window and press Enter) and run:
+   ```
+   python3 patch/make_cottonbme.py .
+   ```
+   On Windows, if `python3` is not found, use `python` or `py` instead:
+   ```
+   py patch/make_cottonbme.py .
+   ```
+5. You get `cottonbme.zip` in the same folder, the full English ROM set
+   (all the chips, it does not need `cottonbm.zip` any more). The script
+   prints "written ... cottonbme.zip" and the CRC of every file.
+6. Copy `cottonbme.zip` and `stvbios.zip` into your ROM folder and start
+   `cottonbme` with the **mame2003-plus** core (RetroArch: Load Content,
+   pick `cottonbme.zip`, choose "Arcade (MAME 2003-Plus)"). The core must
+   be a build with the `cottonbme` entry (branch `stv-cottonbm-english`
+   of [zanac/mame2003-plus-libretro](https://github.com/zanac/mame2003-plus-libretro)).
+
+If the script says `cottonbm.zip not found`, the file is not in the folder
+you gave it (the `.` means "this folder"); if it says a chip is not found,
+your `cottonbm.zip` is a different dump: check it against the input table
+below.
 
 ## Support
 Hey dude! Help me out for a couple of :beers: or a :coffee:!<br/>
@@ -22,17 +67,24 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!<br/>
 | Part | State |
 |---|---|
 | Stage result screen: the 25 lines | English; stage 1 checked in the emulator, all lines checked as sprites (sheet below) |
-| Character select: main shot and sub weapon panels | English, checked in the emulator |
-| Katakana under the title logo and the character names (attract) | not changed yet |
-| ROM set `cottonbme`, patch, driver entry | done |
+| Character select: main shot and sub weapon panels | English, checked in the emulator for all 8 characters |
+| Katakana under the title logo | removed (it only repeats the logo) |
+| Character full names in the attract mode | English, checked in the emulator |
+| Non-Japanese BIOS: select panels of the wrong character, "Spred" | fixed, checked in the emulator for all 8 characters |
+| ROM set `cottonbme` (complete, all chips), patch, driver entry | done |
+
+What the BIOS region changes, checked in MAME with `-bios jp` and
+`-bios us`:
+
+| | Japanese BIOS | Other BIOS |
+|---|---|---|
+| Result line | shown, English | the game does not show it (checked on the stage 1 result screen, snapshots every 5 frames: same screen, no line) |
+| Select panels | English | English, right character, "Spread" |
+| Full names (attract) | shown, English | the game does not show them |
+| Title katakana | removed | the game does not show them |
 
 Known limits:
 
-- The game has English select panels for the other regions, but with a
-  non-Japanese BIOS it shows them for the wrong characters (Cotton gets
-  "Ice / Wing" instead of "Fire / Twist"). Here the Japanese panels are
-  pointed at the right English ones, so the set runs with the Japanese
-  BIOS as before.
 - The result line is on screen for a short time; the lines were checked
   in the emulator for stage 1 only. The other 24 are built the same way
   and shown below as the cartridge holds them.
@@ -50,6 +102,19 @@ the right (mame2003-plus).
 |---|---|
 | Stage result screen | ![result screen](screenshots/result_stage1.png) |
 | Character select | ![character select](screenshots/select.png) |
+| Title (the katakana under the logo) | ![title](screenshots/title.png) |
+| Character full names (attract) | ![profiles](screenshots/profiles.png) |
+
+With a non-Japanese BIOS (`-bios us`), original game on the left: Cotton
+gets the panel of another character, Silk too, and the "Spread" panel says
+"Spred". `cottonbme` on the right.
+
+![select screen, US BIOS](screenshots/select_us.png)
+
+The stage 1 result screen in the same moments, Japanese BIOS on top and US
+BIOS below: with the US BIOS the game skips the line.
+
+![result screen, Japanese and US BIOS](screenshots/result_bios.png)
 
 All the result lines, Japanese sprites of the cartridge on the left,
 English sprites of `cottonbme` on the right:
@@ -72,27 +137,39 @@ python3 patch/make_cottonbme.py ROMDIR [OUTDIR]
 This writes `cottonbme.zip`. Python 3, standard library only. The script
 checks every file it writes against the CRC32 in the patch.
 
-`cottonbme` is a clone of `cottonbm`: `cottonbme.zip` holds only the two
-chips the translation changes, the others are loaded from `cottonbm.zip`,
-which must stay next to it.
+`cottonbme.zip` is a complete set: it holds all seven chips, so it works
+on its own (with `stvbios.zip`). `cottonbme` is still declared as a clone
+of `cottonbm` in the driver, so the two sets sit together in a ROM list.
 
-Input, from `cottonbm.zip` (found by CRC, the names inside the zip do not
-matter):
+Input, the chips of `cottonbm.zip` (found by CRC, the names inside the zip
+do not matter):
 
 | File | Size | CRC32 | SHA1 |
 |---|---|---|---|
+| mpr21075.7 | 2097152 | 200b58ba | 6daad6d70a3a41172e8d9402af775c03e191232d |
+| mpr21070.2 | 4194304 | 56c0bf1d | c2b564ce536c637bb723ed96683b27596e87ebe7 |
+| mpr21071.3 | 4194304 | 2bb18df2 | e900adb94ad3f48be00a4ce33e915147dc6a8737 |
+| mpr21072.4 | 4194304 | 7c7cb977 | 376dfb8014050605b00b6545520bd544768f5828 |
 | mpr21073.5 | 4194304 | f2e5a5b7 | 9258d508ef6f6529efc4ad172fd29e69877a99eb |
+| mpr21074.6 | 4194304 | 6a7e7a7b | a0b1e7a85e623b59886b28797281df1d65b8a5aa |
 | mpr21069.1 | 4194304 | 6a28e3c5 | 60454b71db49b872e0cb89fae2259fed601588bd |
 
 Output, the files of `cottonbme.zip`:
 
-| File | Size | CRC32 | SHA1 | Replaces |
+| File | Size | CRC32 | SHA1 | From |
 |---|---|---|---|---|
-| cbe21073.5 | 4194304 | edf2e030 | 5f6c87723a6a84d03237e083f9b0dbf7a9beb9ab | mpr21073.5 |
-| cbe21069.1 | 4194304 | 3d516717 | 403af91838fc7a6f9d98a6d6861d19b33130991b | mpr21069.1 |
+| cbe21075.7 | 2097152 | d7642c5d | 68a594da85796630c656abb0e931d9d0b034c18d | mpr21075.7, changed |
+| cbe21070.2 | 4194304 | 6911739c | 2c12e5705268caf9ae29d1fe4ae1b3021a4ee172 | mpr21070.2, changed |
+| mpr21071.3 | 4194304 | 2bb18df2 | e900adb94ad3f48be00a4ce33e915147dc6a8737 | copied |
+| mpr21072.4 | 4194304 | 7c7cb977 | 376dfb8014050605b00b6545520bd544768f5828 | copied |
+| cbe21073.5 | 4194304 | a93744a2 | 1bbc5befefea90d41991cce30f985f94240a20d6 | mpr21073.5, changed |
+| mpr21074.6 | 4194304 | 6a7e7a7b | a0b1e7a85e623b59886b28797281df1d65b8a5aa | copied |
+| cbe21069.1 | 4194304 | cc3b4a22 | 79012e86e8a784a7268289b1082d79714b86f79d | mpr21069.1, changed |
 
-The `cbe` names are the ones the `cottonbme` driver entry in mame2003-plus
-expects.
+These names and CRCs are the ones the `cottonbme` driver entry in
+mame2003-plus expects. To check the set in MAME 0.264 instead, rename the
+`cbe` files to `mpr` in a copy of `cottonbm.zip` and start `cottonbm`
+(`-bios jp` or `-bios us`).
 
 ## Rebuilding everything
 
@@ -115,8 +192,8 @@ The English text is `text/result_lines.txt`, the font
 | `patch/make_cottonbme.py` | ROM set from `cottonbm.zip` and `cottonbme.dat` |
 | `text/result_lines.txt` | frames, Japanese and English of every result line |
 | `font/cotton2_hint_font.json` | the font: one 16-row bitmap per letter |
-| `tools/translate.py` | the English cartridge: result lines, select panels |
-| `tools/font.py` | draws a line with the font (outline, 2x) |
+| `tools/translate.py` | the English cartridge: result lines, select panels, title, names |
+| `tools/font.py` | draws a line with the font (outline; 2x or 1x) |
 | `tools/lz.py` | LZ00 compressor |
 | `tools/romset.py` | ROM names and patch format |
 | `tools/cblib.py` | cartridge, file chain, MF containers, LZ00 decoder |
@@ -185,10 +262,57 @@ container itself does not change size and nothing else moves.
 ### Character select panels
 
 `CHR_SEL.MF` has the shot/weapon panels twice: Japanese in frames 56–59
-and 64–67, English in frames 72–79, in the same character order and at
-the same position. The game shows the English ones with a non-Japanese
-BIOS, but for the wrong characters. Here the Japanese frames point at the
-English sprites.
+and 64–67, English in frames 72–79, in the same order and at the same
+position:
+
+| Panel | Japanese frame | English frame |
+|---|---|---|
+| Fire / Twist | 56 | 72 |
+| Wind / Focus | 57 | 73 |
+| Ice / Sector | 58 | 74 |
+| Light / Search | 59 | 75 |
+| Ice / Wing | 64 | 76 |
+| Wind / Homing | 65 | 77 |
+| Fire / Pierce | 66 | 78 |
+| Light / Spread | 67 | 79 ("Spred") |
+
+With a Japanese BIOS the game shows the right Japanese panel. With any
+other BIOS it shows the English frame 4 places away (character 0, Cotton,
+gets frame 76, "Ice / Wing", instead of 72): a bug of the original game,
+seen in MAME with `-bios us`.
+
+Here the Japanese frames point at the English sprites, and the English
+frames point at the sprite 4 places back, so each character gets its own
+panel with every BIOS. Frame 79 also gets a new sprite: the same panel
+with an "a" put between the "e" and the "d" of "Spred". The "a" is cut
+from "Weapon" in the same line, so it is the game's own letter; the panel
+text is colour 1, the background a checkerboard of colours 0 and 2.
+
+### Title and character names
+
+Under the logo of the title screen the Japanese BIOS shows
+"コットン ブーメラン" (*Cotton Boomerang*, frame 6 of `CHR_STT.MF` and of
+`CHR_TTLB.MF`, the same 176x24 sprite). It is the title the logo already
+shows in English, so it becomes an empty sprite. The game itself does not
+show it with the other BIOSes.
+
+In the attract mode every character has a big English name (COTTON, SILK,
+APPLI & NEEDLE) and, with the Japanese BIOS only, the full name in
+katakana below it (`CHR_TTLA.MF`):
+
+| Frame | Katakana | English |
+|---|---|---|
+| 18 | ナタデ・コットン | Nata de Cotton |
+| 38 | シルク | Silk |
+| 26 | アプリ・ケ・パンプキン | Appli Ke / Pumpkin |
+| 27 | ニードル・ワーク 3世 | Needle Work / III |
+
+The new sprites have the same size and palette: every katakana line is
+replaced by the English line drawn with the font at its normal size, left
+aligned where the katakana started. The outline is colour 15 like the
+katakana; the fill of every row takes the colour the katakana have in
+that row, so the gradient of the original stays (yellow for Cotton, blue
+for Silk, pink for Appli and Needle). The "&" in frame 26 stays.
 
 ### Font
 
@@ -215,4 +339,5 @@ lines.
   the authors, no commercial use, share alike.
 - Cartridge tools: from [zanac/Cotton2](https://github.com/zanac/Cotton2).
 - *Cotton Boomerang* © Success 1998. This project distributes no game
-  data: the patch only holds the differences from the original chips.
+  data: the patch only holds the differences from the original chips,
+  and the unchanged chips are copied from your own `cottonbm.zip`.

@@ -50,6 +50,18 @@ def outline(px, w, h):
     return out
 
 
+def render_1x(text):
+    """one line at 1x with the outline: (rows of 0/1/2, width, 18 rows)"""
+    r, w = line_1x(text)
+    W, H = w + 2, ROWS + 2
+    px = [[0] * W for _ in range(H)]
+    for y in range(ROWS):
+        for x in range(w):
+            if r[y][x]:
+                px[y + 1][x + 1] = 2
+    return outline(px, W, H), W, H
+
+
 def render(lines, pitch=14):
     """lines of text, centered; 2x scaled with the outline drawn at 1x then
     scaled (as the Cotton 2 font looks at 2x). Returns (rows, width, height)
