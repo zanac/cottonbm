@@ -118,7 +118,29 @@ def result_lines(cart):
         cart.log.append('RS %3d,%3d %3dx%-2d %s' % (a, b, Wp, H, ' / '.join(lines)))
 
 
+# character select: the Japanese panels (main shot type, sub weapon) and the
+# English ones of the other regions, same order (Cotton, ...)
+SEL_JP = (56, 57, 58, 59, 64, 65, 66, 67)
+SEL_EN = (72, 73, 74, 75, 76, 77, 78, 79)
+
+
+def select_panels(cart):
+    """the Japanese panel frames show the English sprites. The game has them
+    for the other regions, but there it shows them for the wrong characters
+    (Cotton gets "Ice / Wing"), so the frames are pointed at them here"""
+    sub = cart.subfiles('CHR_SEL.MF')
+    sch_at = sub['CHR_SEL.SCH']
+    first = struct.unpack('>I', cart.reg[sch_at:sch_at + 4])[0]
+    ptr = [struct.unpack('>I', cart.reg[sch_at + i:sch_at + i + 4])[0] for i in range(0, first, 4)]
+    for jp, en in zip(SEL_JP, SEL_EN):
+        pj, pe = sch_at + ptr[jp], sch_at + ptr[en]
+        assert cart.reg[pj + 4:pj + 12] == cart.reg[pe + 4:pe + 12], (jp, en)   # palette, position
+        cart.reg[pj:pj + 4] = cart.reg[pe:pe + 4]
+    cart.log.append('SEL panels %s -> %s' % (SEL_JP, SEL_EN))
+
+
 def build(reg):
     cart = Cart(reg)
     result_lines(cart)
+    select_panels(cart)
     return bytes(cart.reg), cart.log
