@@ -5,10 +5,9 @@ Adapted from the Cotton 2 English project (github.com/zanac/Cotton2).
 Python 3 standard library only.
 
 Formats handled here:
-  * the ST-V cartridge region of cotton2 and its chained file system
-  * the Saturn disc image (ISO 9660 data track, raw 2352 or cooked 2048)
+  * the ST-V cartridge region of cottonbm and its chained file system
   * the "MF" graphics containers (SCH/SPT/SPL/SAN/SIF/SCP subfiles)
-  * the LZ00 sprite compression used by the Saturn port
+  * the LZ00 sprite compression (decoder; the encoder is lz.py)
 """
 import os, struct, zipfile
 
