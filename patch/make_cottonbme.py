@@ -5,8 +5,9 @@ cottonbm ROM set. Python 3 standard library only.
 usage: make_cottonbme.py ROMDIR [OUTDIR]
 
 ROMDIR must hold cottonbm.zip (the MAME set). The result is
-OUTDIR/cottonbme.zip (OUTDIR defaults to ROMDIR). The ST-V BIOS
-(stvbios.zip) is needed to run it, as for cottonbm.
+OUTDIR/cottonbme.zip (OUTDIR defaults to ROMDIR), with the chips the
+translation changes; cottonbme is a clone of cottonbm, so the emulator also
+needs cottonbm.zip (the other chips) and the ST-V BIOS (stvbios.zip).
 """
 import hashlib, os, sys, zipfile, zlib, lzma, struct
 

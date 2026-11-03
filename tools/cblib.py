@@ -10,7 +10,7 @@ Formats handled here:
   * the "MF" graphics containers (SCH/SPT/SPL/SAN/SIF/SCP subfiles)
   * the LZ00 sprite compression used by the Saturn port
 """
-import os, struct, zipfile, zlib
+import os, struct, zipfile
 
 # ---------------------------------------------------------------- arcade
 

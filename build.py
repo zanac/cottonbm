@@ -30,7 +30,7 @@ def main():
     eng, log = translate.build(bytes(reg))
     for line in log:
         print('  ' + line)
-    for name, crc, data in romset.write_zip(eng, os.path.join(out, romset.SET + '.zip')):
+    for name, crc, data in romset.write_zip(orig_chips, eng, os.path.join(out, romset.SET + '.zip')):
         print('  %-12s %08x' % (name, crc))
     dat = os.path.join(HERE, 'patch', romset.SET + '.dat')
     open(dat, 'wb').write(romset.make_patch(orig_chips, eng))
