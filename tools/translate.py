@@ -296,8 +296,37 @@ def profile_names(cart):
     cart.log.append('profile names: ' + ', '.join(' '.join(l) for k, l in PROFILE_NAMES))
 
 
+# --- region ---------------------------------------------------------------------
+
+# The program at 0x200000 of the cartridge runs from 0x0600f000. At start
+# the game reads the area code the BIOS leaves at 0x06000248 (bits 12-15:
+# 1 Japan, 4 USA, ...) and keeps its own copy at 0x06043884: 0 for Japan,
+# the area code otherwise:
+#   0602244c  mov.l @r7,r4      ; r7 = 0x06000248
+#   0602244e  shlr8 r4 / shlr2 r4 / shlr2 r4 / and r6,r4 (r6 = 15)
+#   06022458  cmp/eq #1,r0
+#   0602245a  bf    06022460    ; not Japan: keep the area code
+#   0602245c  bra   0602246c
+#   0602245e  mov   #0,r0       ; Japan: 0
+#   ...
+#   0602246c  mov.b r0,@(4,r5)  ; r5 = 0x06043880
+# With the bf replaced by a nop the game always takes the Japanese branch,
+# so the translated Japanese texts are used with every BIOS. The BIOS
+# itself (coinage, warning screens) still follows the real region.
+REGION_BF = 0x21345a
+REGION_CODE = bytes.fromhex('6472441944094409246960438801' '8b01' 'a006e000')
+
+
+def region_japan(cart):
+    at = REGION_BF - 14
+    assert bytes(cart.reg[at:at + len(REGION_CODE)]) == REGION_CODE, 'region code not found'
+    cart.reg[REGION_BF:REGION_BF + 2] = b'\x00\x09'
+    cart.log.append('region: the game runs in Japanese mode with every BIOS')
+
+
 def build(reg):
     cart = Cart(reg)
+    region_japan(cart)
     result_lines(cart)
     select_panels(cart)
     katakana_title(cart)

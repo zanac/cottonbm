@@ -6,18 +6,20 @@ for [mame2003-plus](https://github.com/zanac/mame2003-plus-libretro)
 (branch `stv-cottonbm-english`).
 
 Most of the arcade game is already in English: menus, in-game messages,
-ranking, staff roll and ending. What is Japanese is the line one of the
-characters says on the stage result screen, the shot/weapon panel of the
+ranking, staff roll and ending. The Japanese parts are the line a
+character says on the stage result screen, the shot/weapon panels of the
 character select screen, the katakana under the title logo and the full
 names of the characters in the attract mode. There is no fan translation
 of this game, so the lines are translated here and drawn with the English
 font of the Cotton 2 Saturn fan translation, the same one the
 [Cotton 2 English](https://github.com/zanac/Cotton2) arcade set uses.
 
-The game also has an English mode, used with a non-Japanese BIOS (US,
-Europe, ...), and it has two mistakes of its own: the select screen shows
-the weapons of the wrong character and says "Spred". Both are fixed here,
-so the set is right with every BIOS.
+With a non-Japanese BIOS (US, Europe, ...) the original game switches to
+an export mode that drops the result lines and the full names, and shows
+the select panels of the wrong character, one of them with the typo
+"Spred". `cottonbme` always runs the game in its Japanese mode, which is
+the translated one, so you get the same complete English game with every
+BIOS.
 
 ## For dummies
 
@@ -70,18 +72,21 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!<br/>
 | Character select: main shot and sub weapon panels | English, checked in the emulator for all 8 characters |
 | Katakana under the title logo | removed (it only repeats the logo) |
 | Character full names in the attract mode | English, checked in the emulator |
-| Non-Japanese BIOS: select panels of the wrong character, "Spred" | fixed, checked in the emulator for all 8 characters |
+| Region: the game always runs in its Japanese (translated) mode | done, checked in MAME with `-bios jp` and `-bios us` |
+| English panels of the export mode: wrong character, "Spred" | fixed as well, though the export mode is no longer used |
 | ROM set `cottonbme` (complete, all chips), patch, driver entry | done |
 
-What the BIOS region changes, checked in MAME with `-bios jp` and
-`-bios us`:
+What the BIOS region changes:
 
-| | Japanese BIOS | Other BIOS |
-|---|---|---|
-| Result line | shown, English | the game does not show it (checked on the stage 1 result screen, snapshots every 5 frames: same screen, no line) |
-| Select panels | English | English, right character, "Spread" |
-| Full names (attract) | shown, English | the game does not show them |
-| Title katakana | removed | the game does not show them |
+| | Original, Japanese BIOS | Original, other BIOS | `cottonbme`, any BIOS |
+|---|---|---|---|
+| Result line | Japanese | not shown | English |
+| Select panels | Japanese | English, wrong character, "Spred" | English |
+| Full names (attract) | katakana | not shown | English |
+| Title katakana | shown | not shown | removed |
+
+The BIOS itself still follows its region: its boot screens, warnings and
+coin settings do not change.
 
 Known limits:
 
@@ -105,16 +110,16 @@ the right (mame2003-plus).
 | Title (the katakana under the logo) | ![title](screenshots/title.png) |
 | Character full names (attract) | ![profiles](screenshots/profiles.png) |
 
-With a non-Japanese BIOS (`-bios us`), original game on the left: Cotton
-gets the panel of another character, Silk too, and the "Spread" panel says
-"Spred". `cottonbme` on the right.
+With the US BIOS (`-bios us`), original game on the left, `cottonbme` on
+the right. In the original every character gets the panel of another one
+(here Cotton, Silk and Needle) and the "Spread" panel says "Spred":
 
 ![select screen, US BIOS](screenshots/select_us.png)
 
-The stage 1 result screen in the same moments, Japanese BIOS on top and US
-BIOS below: with the US BIOS the game skips the line.
+The stage 1 result screen with the US BIOS, original game on top (the line
+is skipped), `cottonbme` below (the line is there):
 
-![result screen, Japanese and US BIOS](screenshots/result_bios.png)
+![result screen, US BIOS](screenshots/result_bios.png)
 
 All the result lines, Japanese sprites of the cartridge on the left,
 English sprites of `cottonbme` on the right:
@@ -158,7 +163,7 @@ Output, the files of `cottonbme.zip`:
 
 | File | Size | CRC32 | SHA1 | From |
 |---|---|---|---|---|
-| cbe21075.7 | 2097152 | d7642c5d | 68a594da85796630c656abb0e931d9d0b034c18d | mpr21075.7, changed |
+| cbe21075.7 | 2097152 | 67304902 | fa74af1216f5f36656c138851e03a1f9ac2aa016 | mpr21075.7, changed |
 | cbe21070.2 | 4194304 | 6911739c | 2c12e5705268caf9ae29d1fe4ae1b3021a4ee172 | mpr21070.2, changed |
 | mpr21071.3 | 4194304 | 2bb18df2 | e900adb94ad3f48be00a4ce33e915147dc6a8737 | copied |
 | mpr21072.4 | 4194304 | 7c7cb977 | 376dfb8014050605b00b6545520bd544768f5828 | copied |
@@ -192,7 +197,7 @@ The English text is `text/result_lines.txt`, the font
 | `patch/make_cottonbme.py` | ROM set from `cottonbm.zip` and `cottonbme.dat` |
 | `text/result_lines.txt` | frames, Japanese and English of every result line |
 | `font/cotton2_hint_font.json` | the font: one 16-row bitmap per letter |
-| `tools/translate.py` | the English cartridge: result lines, select panels, title, names |
+| `tools/translate.py` | the English cartridge: region, result lines, select panels, title, names |
 | `tools/font.py` | draws a line with the font (outline; 2x or 1x) |
 | `tools/lz.py` | LZ00 compressor |
 | `tools/romset.py` | ROM names and patch format |
@@ -259,6 +264,34 @@ chain. The two frames point there (an offset past the end of the `SPT`)
 and get the new x, and a y that keeps the bottom edge of the line. The
 container itself does not change size and nothing else moves.
 
+### Region
+
+The main program is at 0x200000 of the cartridge (in `mpr21075.7`) and
+runs from 0x0600f000. At start the game reads the area code the BIOS
+leaves at 0x06000248 (bits 12–15: 1 Japan, 4 USA, ...) and keeps its own
+copy at 0x06043884: 0 for Japan, the area code otherwise. Everything the
+game does by region (result lines, full names, title katakana, select
+panels) follows that copy.
+
+```
+0602244c  mov.l @r7,r4      ; r7 = 0x06000248
+0602244e  shlr8 r4          ; area code: bits 12-15
+06022450  shlr2 r4
+06022452  shlr2 r4
+06022454  and   r6,r4       ; r6 = 15
+06022456  mov   r4,r0
+06022458  cmp/eq #1,r0
+0602245a  bf    06022460    ; not Japan: keep the area code
+0602245c  bra   0602246c
+0602245e  mov   #0,r0       ; Japan: 0
+...
+0602246c  mov.b r0,@(4,r5)  ; r5 = 0x06043880
+```
+
+The `bf` (cartridge offset 0x21345a) becomes a `nop`, so the game always
+takes the Japanese branch. The area code itself is not changed, so the
+BIOS (coin settings, boot screens) keeps working by its real region.
+
 ### Character select panels
 
 `CHR_SEL.MF` has the shot/weapon panels twice: Japanese in frames 56–59
@@ -276,29 +309,29 @@ position:
 | Fire / Pierce | 66 | 78 |
 | Light / Spread | 67 | 79 ("Spred") |
 
-With a Japanese BIOS the game shows the right Japanese panel. With any
-other BIOS it shows the English frame 4 places away (character 0, Cotton,
-gets frame 76, "Ice / Wing", instead of 72): a bug of the original game,
-seen in MAME with `-bios us`.
+In Japanese mode the game shows the right Japanese panel. In export mode
+it shows the English frame 4 places away (character 0, Cotton, gets frame
+76, "Ice / Wing", instead of 72): a bug of the original game, seen in MAME
+with `-bios us`.
 
-Here the Japanese frames point at the English sprites, and the English
-frames point at the sprite 4 places back, so each character gets its own
-panel with every BIOS. Frame 79 also gets a new sprite: the same panel
+Here the Japanese frames point at the English sprites. The English frames
+are fixed as well, even though `cottonbme` no longer uses the export mode:
+they point at the sprite 4 places back, so each character would get its
+own panel. Frame 79 also gets a new sprite: the same panel
 with an "a" put between the "e" and the "d" of "Spred". The "a" is cut
 from "Weapon" in the same line, so it is the game's own letter; the panel
 text is colour 1, the background a checkerboard of colours 0 and 2.
 
 ### Title and character names
 
-Under the logo of the title screen the Japanese BIOS shows
+Under the logo of the title screen the Japanese mode shows
 "コットン ブーメラン" (*Cotton Boomerang*, frame 6 of `CHR_STT.MF` and of
 `CHR_TTLB.MF`, the same 176x24 sprite). It is the title the logo already
-shows in English, so it becomes an empty sprite. The game itself does not
-show it with the other BIOSes.
+shows in English, so it becomes an empty sprite.
 
 In the attract mode every character has a big English name (COTTON, SILK,
-APPLI & NEEDLE) and, with the Japanese BIOS only, the full name in
-katakana below it (`CHR_TTLA.MF`):
+APPLI & NEEDLE) and, in the Japanese mode only, the full name in katakana
+below it (`CHR_TTLA.MF`):
 
 | Frame | Katakana | English |
 |---|---|---|
