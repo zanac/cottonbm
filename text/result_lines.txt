@@ -1,0 +1,27 @@
+# Cotton Boomerang - lines of the stage result screen (CHR_RS.MF)
+# frames<TAB>Japanese<TAB>English (" / " starts a second line)
+80,81	ウィロ〜ウィロ〜ウィロ〜ッ♪	Willow~ Willow~ Willooow♪
+82,83	ウィローいっくぽ〜ん♥	Here comes a Willow♥
+84,85	お腹が減っちゃあ戦えないのよっ	Can't fight on an empty stomach!
+86,87	新兵器シルクボンバーよん♥ / すご〜い！かっちょいい〜!!	New weapon: Silk Bomber♥ / Wow! So cool!!
+88,89	これはあたしのホウキよ。降りなさいよ！ / いいじゃないのケチ！オルルルル〜ッ	This is MY broom. Get off! / Don't be stingy! Brrrr~!
+90,91	あたし達へのお礼はウィロー百万個でいいわよっ♥	A million Willows will do as thanks♥
+94,95	本物はど〜れだっ	Which one is the real one?
+96,97	カッコイイお兄様の敵はいないのかなあ・・・	No handsome big-brother enemies around...?
+98,99	ひゃっほ〜い！海だ〜っ♥	Yahoo! The sea!♥
+100,101	『アプリは洞窟で美青年カードを手に入れた』	"Appli found a Pretty Boy Card in the cave"
+102,103	う〜ん・・アプリ許してくりだわさ・・・	Ugh... forgive me, Appli...
+104,105	なっ、僕達がいて良かっただろ？	See? Good thing we were here!
+108,109	コットンあっちよっ！あっちぃ!! / うるさいわね、わかってるわよっ	Cotton, that way! It's hot!! / Quiet, I know!
+110,111	う〜ん・・・いまいちよねぇ〜	Hmm... not quite there~
+112,113	ん〜っいい風♥	Mmm, nice breeze♥
+114,115	ウフフッ・・・私って結構強いでしょ♥	Hehe... I'm pretty strong, right?♥
+116,117	火の用心♥	Beware of fire♥
+118,119	やっぱり人気も実力も私が一番ねっ♥	No.1 in looks AND power, as always♥
+122,123	準備運動はこれでおしまいだわさっ	Warm-up's over!
+124,125	トライツ〜ネクストステ〜ジだわさ！	Onward to the next stage!
+126,127	うおお〜っ昨日食べたミミズは良く効くだわさあ！	Whoa! Yesterday's worms really work!
+128,129	戦士に休息は必要だわさ	Even warriors need a rest.
+130,131	アプリィ！そのツッコミはちょっと厳しいだわさ!!	Appliii! That's a bit harsh!!
+132,133	最後の最後まで気は抜けないだわさ	Can't relax till the very end.
+136,137	ムギュ〜ッ・・・ごめんなさ〜いっ	Mmph... I'm sorry~!
