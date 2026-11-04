@@ -70,7 +70,7 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!<br/>
 |---|---|
 | Stage result screen: the 25 lines | English; all lines checked as sprites (sheet below), one line per stage seen in a full game |
 | Character select: main shot and sub weapon panels | English, checked in the emulator for all 8 characters |
-| Katakana under the title logo | removed (it only repeats the logo) |
+| Katakana under the title logo | replaced by "English hack by Vanni Brutto / Zanac" (the katakana only repeat the logo) |
 | Character full names in the attract mode | English, checked in the emulator |
 | Region: the game always runs in its Japanese (translated) mode | done, checked in MAME with `-bios jp` and `-bios us` |
 | English panels of the export mode: wrong character, "Spred" | fixed as well, though the export mode is no longer used |
@@ -84,7 +84,7 @@ What the BIOS region changes:
 | Result line | Japanese | not shown | English |
 | Select panels | Japanese | English, wrong character, "Spred" | English |
 | Full names (attract) | katakana | not shown | English |
-| Title katakana | shown | not shown | removed |
+| Under the title logo | katakana | nothing | "English hack by Vanni Brutto / Zanac" |
 
 The BIOS itself still follows its region: its boot screens, warnings and
 coin settings do not change.
@@ -112,7 +112,7 @@ the right (mame2003-plus).
 |---|---|
 | Stage result screen | ![result screen](screenshots/result_stage1.png) |
 | Character select | ![character select](screenshots/select.png) |
-| Title (the katakana under the logo) | ![title](screenshots/title.png) |
+| Title (under the logo: katakana, now the credit line) | ![title](screenshots/title.png) |
 | Character full names (attract) | ![profiles](screenshots/profiles.png) |
 
 With the US BIOS (`-bios us`), original game on the left, `cottonbme` on
@@ -173,13 +173,13 @@ Output, the files of `cottonbme.zip`:
 
 | File | Size | CRC32 | SHA1 | From |
 |---|---|---|---|---|
-| cbe21075.7 | 2097152 | 67304902 | fa74af1216f5f36656c138851e03a1f9ac2aa016 | mpr21075.7, changed |
-| cbe21070.2 | 4194304 | 6911739c | 2c12e5705268caf9ae29d1fe4ae1b3021a4ee172 | mpr21070.2, changed |
+| cbe21075.7 | 2097152 | 2d81e396 | 4a4f6464641c9551e1b4595fbda46f23098c397f | mpr21075.7, changed |
+| cbe21070.2 | 4194304 | 5b83ae2b | 04b8d5f3c27aa30a3421f2557b66a3074a490b5a | mpr21070.2, changed |
 | mpr21071.3 | 4194304 | 2bb18df2 | e900adb94ad3f48be00a4ce33e915147dc6a8737 | copied |
 | mpr21072.4 | 4194304 | 7c7cb977 | 376dfb8014050605b00b6545520bd544768f5828 | copied |
 | cbe21073.5 | 4194304 | a93744a2 | 1bbc5befefea90d41991cce30f985f94240a20d6 | mpr21073.5, changed |
 | mpr21074.6 | 4194304 | 6a7e7a7b | a0b1e7a85e623b59886b28797281df1d65b8a5aa | copied |
-| cbe21069.1 | 4194304 | cc3b4a22 | 79012e86e8a784a7268289b1082d79714b86f79d | mpr21069.1, changed |
+| cbe21069.1 | 4194304 | 22f57a74 | 0a7923c3d8c6896674344659cf41dd7f6d81d736 | mpr21069.1, changed |
 
 These names and CRCs are the ones the `cottonbme` driver entry in
 mame2003-plus expects. To check the set in MAME 0.264 instead, rename the
@@ -337,7 +337,11 @@ text is colour 1, the background a checkerboard of colours 0 and 2.
 Under the logo of the title screen the Japanese mode shows
 "コットン ブーメラン" (*Cotton Boomerang*, frame 6 of `CHR_STT.MF` and of
 `CHR_TTLB.MF`, the same 176x24 sprite). It is the title the logo already
-shows in English, so it becomes an empty sprite.
+shows in English, so its place goes to the credit line "English hack by
+Vanni Brutto / Zanac", drawn with the font at its normal size in the
+colours of the katakana (outline 2, fill 15). The new sprite is 264x24;
+the x and y of a frame are the centre of the sprite, so the line stays
+centred where the katakana were.
 
 In the attract mode every character has a big English name (COTTON, SILK,
 APPLI & NEEDLE) and, in the Japanese mode only, the full name in katakana
@@ -366,7 +370,7 @@ pixels (values 3 and 4) joined in 8 directions, pieces that overlap in x
 merged (the dot of i, j); the count of pieces matches the letters of every
 line. The most common drawing of each letter is kept; letters are 3
 pixels apart, a space is 9. The hints have no E, F, K, M, N, O, P, Q, R,
-S, V, X, Z, q, x, z, digits and some punctuation: those are drawn in the
+S, V, X, Z, q, x, z, digits and some punctuation (/ among them): those are drawn in the
 same style (`tools/font_extra.py`), with the ♥ and ♪ of the Japanese
 lines.
 

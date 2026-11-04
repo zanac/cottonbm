@@ -223,16 +223,34 @@ def select_panels(cart):
 
 # --- title and character profiles (attract) -----------------------------------
 
-def katakana_title(cart):
+TITLE_CREDIT = 'English hack by Vanni Brutto / Zanac'
+
+
+def title_credit(cart):
     """"コットン ブーメラン" under the logo (frame 6 of CHR_STT.MF and of
-    CHR_TTLB.MF, the same sprite): the title in Japanese, already in the
-    logo; it becomes an empty sprite"""
+    CHR_TTLB.MF, the same sprite) is the title in Japanese, already in the
+    logo. In its place goes the credit of the translation, drawn with the
+    font at 1x in the colours of the katakana (outline 2, fill 15). The
+    frame x and y are the centre of the sprite, so a wider sprite stays
+    centred where the katakana were"""
+    rows, tw, th = font.render_1x(TITLE_CREDIT)
+    w = (tw + 7) & ~7
+    h = 24
+    top = (h - th) // 2
+    px = [0] * (w * h)
+    left = (w - tw) // 2
+    for y in range(th):
+        for x in range(tw):
+            v = rows[y][x]
+            if v:
+                px[(top + y) * w + left + x] = 2 if v == 1 else 15
     for mf in ('CHR_STT.MF', 'CHR_TTLB.MF'):
         sch_at, spt_at, recs = frame_table(cart, mf)
-        w, h, px, hdr = sprite(cart, spt_at, recs[6])
-        off = new_sprite(cart, spt_at, hdr, w, h, [0] * (w * h))
+        ow, oh, opx, hdr = sprite(cart, spt_at, recs[6])
+        assert oh == h, (mf, ow, oh)
+        off = new_sprite(cart, spt_at, hdr, w, h, px)
         cart.reg[recs[6]:recs[6] + 4] = struct.pack('>I', off)
-    cart.log.append('title katakana removed')
+    cart.log.append('title: katakana replaced by "%s"' % TITLE_CREDIT)
 
 
 # frame of CHR_TTLA.MF, English lines (one per katakana line of the sprite)
@@ -329,6 +347,6 @@ def build(reg):
     region_japan(cart)
     result_lines(cart)
     select_panels(cart)
-    katakana_title(cart)
+    title_credit(cart)
     profile_names(cart)
     return bytes(cart.reg), cart.log
