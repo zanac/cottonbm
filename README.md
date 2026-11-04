@@ -68,13 +68,14 @@ Hey dude! Help me out for a couple of :beers: or a :coffee:!<br/>
 
 | Part | State |
 |---|---|
-| Stage result screen: the 25 lines | English; stage 1 checked in the emulator, all lines checked as sprites (sheet below) |
+| Stage result screen: the 25 lines | English; all lines checked as sprites (sheet below), one line per stage seen in a full game |
 | Character select: main shot and sub weapon panels | English, checked in the emulator for all 8 characters |
 | Katakana under the title logo | removed (it only repeats the logo) |
 | Character full names in the attract mode | English, checked in the emulator |
 | Region: the game always runs in its Japanese (translated) mode | done, checked in MAME with `-bios jp` and `-bios us` |
 | English panels of the export mode: wrong character, "Spred" | fixed as well, though the export mode is no longer used |
 | ROM set `cottonbme` (complete, all chips), patch, driver entry | done |
+| Full game, start to ending, US BIOS | played in MAME (screenshots below): every screen in English |
 
 What the BIOS region changes:
 
@@ -90,9 +91,13 @@ coin settings do not change.
 
 Known limits:
 
-- The result line is on screen for a short time; the lines were checked
-  in the emulator for stage 1 only. The other 24 are built the same way
-  and shown below as the cartridge holds them.
+- The game has a result screen after stages 1 to 5 (the last stage goes
+  straight to the ending). A full game shows one line per result screen,
+  so 5 of the 25 lines were seen in the emulator; the other 20 are built
+  the same way and shown below as the cartridge holds them.
+- The tea cup Cotton holds in the picture after the ending has a kanji
+  (茶, "tea") painted on it. It is part of the drawing and is left as it
+  is.
 
 ## Screenshots
 
@@ -120,6 +125,11 @@ The stage 1 result screen with the US BIOS, original game on top (the line
 is skipped), `cottonbme` below (the line is there):
 
 ![result screen, US BIOS](screenshots/result_bios.png)
+
+A full game with the US BIOS (MAME, `-bios us`): the result screens of
+stages 1 to 5 and the ending.
+
+![full game, US BIOS](screenshots/full_game_us.png)
 
 All the result lines, Japanese sprites of the cartridge on the left,
 English sprites of `cottonbme` on the right:
